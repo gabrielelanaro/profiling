@@ -514,6 +514,8 @@ def __profile__(filename, code, globals_, profiler_factory,
         profiler.stop()
     # discard this __profile__ function from the result.
     profiler.stats.discard_child(frame.f_code)
+    profiler.stats.discard_child(get_function_code(profiler.start))
+    profiler.stats.discard_child(get_function_code(profiler.stop))
     if dump_filename is None:
         stats, cpu_time, wall_time = profiler.result()
         viewer, loop = make_viewer(mono)
