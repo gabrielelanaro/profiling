@@ -4,11 +4,12 @@
     ~~~~~~~~~~~~~~~~~~
 """
 from __future__ import absolute_import
+
 import time
 
 from .stats import RecordingStatistics
 from .utils import Runnable, frame_stack
-from .viewer import StatisticsTable
+from .viewer import StatisticsTable, StatisticsViewer
 
 
 __all__ = ['Profiler', 'ProfilerWrapper']
@@ -61,6 +62,16 @@ class Profiler(Runnable):
         except AttributeError:
             cpu_time = wall_time = 0.0
         return (self.stats, cpu_time, wall_time)
+
+    def run_viewer(self):
+        """A helper function which runs the statistics viewer of the profiling
+        result.
+        """
+        viewer = StatisticsViewer()
+        viewer.set_profiler_class(self.__class__)
+        viewer.set_result(*self.result())
+        loop = viewer.loop()
+        loop.run()
 
 
 class ProfilerWrapper(Profiler):
